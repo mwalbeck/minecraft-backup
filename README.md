@@ -1,5 +1,7 @@
+This fork is a drop in replacement for tmux instead of GNU Screen.
+
 # Minecraft Backup
-Backup script for Linux servers running a Minecraft server in a GNU Screen
+Backup script for Linux servers running a Minecraft server in a tmux session
 
 ### Disclaimer
 Backups are essential to the integrity of your Minecraft world. You should automate regular backups and **check that your backups work**. While this script has been used in production for several years, it is up to you to make sure that your backups work and that you have a reliable backup policy. 
@@ -16,7 +18,7 @@ Please refer to the LICENSE (MIT License) for the full legal disclaimer.
 
 ## Requirements
 - Linux computer (tested on Ubuntu)
-- GNU Screen (running your Minecraft server)
+- Tmux (running your Minecraft server)
 - Minecraft server (tested with Vanilla 1.10.2 only)
 
 ## Installation
@@ -38,7 +40,7 @@ Command line options:
 -o    Output directory
 -p    Prefix that shows in Minecraft chat (default: Backup)
 -q    Suppress warnings
--s    Minecraft server screen name
+-s    Minecraft server tmux session name
 -v    Verbose mode
 ```
 
@@ -46,7 +48,7 @@ Example usage of command line options:
 ```bash
 ./backup.sh -c -i /home/server/minecraft-server/world -o /mnt/external-storage/minecraft-backups -s minecraft
 ```
-This will use show chat messages (`-c`) in the screen called "minecraft" and save a backup of `/home/server/minecraft-server/world` into `/mnt/external-storage/minecraft-backups` using the default thinning delete policy for old backups.
+This will use show chat messages (`-c`) in the tmux session called "minecraft" and save a backup of `/home/server/minecraft-server/world` into `/mnt/external-storage/minecraft-backups` using the default thinning delete policy for old backups.
 
 4. Create a cron job to automatically backup:
     - Edit the crontab: `$ crontab -e`
@@ -67,7 +69,7 @@ Then you can move your restored world (`restored-world` in this case) to your Mi
 ## Help
 - Make sure the compression algorithm you specify is installed on your system. (zstd is not installed by default)
 - Make sure your compression algorithm is in the crontab's PATH
-- Make sure cron has permissions for all the files involved and access to the Minecraft server's GNU Screen
+- Make sure cron has permissions for all the files involved and access to the Minecraft server's tmux session
 - It's surprising how much space backups can take--make sure you have enough empty space
 - `SERVER_DIRECTORY` should be the server directory, not the `world` directory
 - Do not put trailing `/` in the `SERVER_DIRECTORY` or `BACKUP_DIRECTORY`

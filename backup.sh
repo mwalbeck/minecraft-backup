@@ -4,11 +4,11 @@
 # by Nicolas Chan
 # MIT License
 #
-# For Minecraft servers running in a GNU screen.
+# For Minecraft servers running in a tmux session.
 # For most convenience, run automatically with cron.
 
 # Default Configuration 
-SCREEN_NAME="" # Name of the GNU Screen your Minecraft server is running in
+TMUX_NAME="" # Name of the tmux session your Minecraft server is running in
 SERVER_WORLD="" # Server world directory
 BACKUP_DIRECTORY="" # Directory to save backups in
 MAX_BACKUPS=128 # -1 indicates unlimited
@@ -45,7 +45,7 @@ while getopts 'a:cd:e:f:hi:l:m:o:p:qs:v' FLAG; do
        echo "-o    Output directory"
        echo "-p    Prefix that shows in Minecraft chat (default: Backup)"
        echo "-q    Suppress warnings"
-       echo "-s    Minecraft server screen name"
+       echo "-s    Minecraft server tmux session name"
        echo "-v    Verbose mode"
        exit 0
        ;;
@@ -55,7 +55,7 @@ while getopts 'a:cd:e:f:hi:l:m:o:p:qs:v' FLAG; do
     o) BACKUP_DIRECTORY=$OPTARG ;;
     p) PREFIX=$OPTARG ;;
     q) SUPPRESS_WARNINGS=true ;;
-    s) SCREEN_NAME=$OPTARG ;;
+    s) TMUX_NAME=$OPTARG ;;
     v) DEBUG=true ;;
   esac
 done
@@ -69,8 +69,8 @@ log-warning () {
 
 # Check for missing encouraged arguments
 if ! $SUPPRESS_WARNINGS; then
-  if [[ $SCREEN_NAME == "" ]]; then
-    log-warning "Minecraft screen name not specified (use -s)"
+  if [[ $TMUX_NAME == "" ]]; then
+    log-warning "Minecraft tmux session name not specified (use -s)"
   fi
 fi
 # Check for required arguments
@@ -91,7 +91,7 @@ fi
 ARCHIVE_FILE_NAME=$TIMESTAMP.tar$COMPRESSION_FILE_EXTENSION
 ARCHIVE_PATH=$BACKUP_DIRECTORY/$ARCHIVE_FILE_NAME
 
-# Minecraft server screen interface functions
+# Minecraft server tmux interface functions
 message-players () {
   local MESSAGE=$1
   local HOVER_MESSAGE=$2
@@ -99,8 +99,8 @@ message-players () {
 }
 execute-command () {
   local COMMAND=$1
-  if [[ $SCREEN_NAME != "" ]]; then
-    screen -S $SCREEN_NAME -p 0 -X stuff "$COMMAND$(printf \\r)"
+  if [[ $TMUX_NAME != "" ]]; then
+    tmux send-keys -t $TMUX_NAME "$COMMAND$(printf \\r)"
   fi
 }
 message-players-error () {
